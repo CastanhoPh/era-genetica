@@ -1,0 +1,17 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    match /characters/{userId} {
+      // Allow users to read, create, and write their own character sheet.
+      // Allow admins to read any character sheet.
+      allow read: if request.auth.uid == userId || isAdmin();
+      allow create, write: if request.auth.uid == userId;
+    }
+  }
+}

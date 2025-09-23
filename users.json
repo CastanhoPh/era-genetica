@@ -1,0 +1,101 @@
+{"users": [
+{
+  "localId": "6FgXfEfnhnei7a8c1G4KJi03soG2",
+  "email": "otavio.santana@era-genetica.com",
+  "emailVerified": false,
+  "passwordHash": "A4dWUptFxpP1vOVW/aAbyOMIqkHP8/Ll9EoEJG2+DqklpYXFHi6Puu4ejtiNs/a8oD0dAOrukXunwSC2zqf4BQ==",
+  "salt": "A58xPcj0iBUAmw==",
+  "lastSignedInAt": "1758564875321",
+  "createdAt": "1758564875321",
+  "providerUserInfo": []
+},
+{
+  "localId": "CWnY3p3CCiZrht5zrK60k5DbwXn2",
+  "email": "kaique.malta@era-genetica.com",
+  "emailVerified": false,
+  "passwordHash": "5g22S3g74CFxSKYuPjd2YfyskXab1k4fIjL92lZim7P/AB0nYa5EkJmszCJ+dD9jFMyPKKEOU9EMRMglGDshQQ==",
+  "salt": "FfTAGBsPgp4WFA==",
+  "lastSignedInAt": "1758564876422",
+  "createdAt": "1758564876422",
+  "providerUserInfo": []
+},
+{
+  "localId": "EA98dnn0Z4dTsMRIV4oxWlxXjxW2",
+  "email": "leonardo.scaramella@era-genetica.com",
+  "emailVerified": false,
+  "passwordHash": "FObHUm3Ygr/H1gOb94lVlp+s6wmQM8HxKr6AYU41be7uxP3iEaik7jBa12DQ+GPfXa+sIKfvrdaI4i4srJueDw==",
+  "salt": "lv8sDFv4IV9pgA==",
+  "lastSignedInAt": "1758564873933",
+  "createdAt": "1758564873933",
+  "providerUserInfo": []
+},
+{
+  "localId": "FTbNgd4MH1QKDlYpNP2Kr4QCiMu2",
+  "email": "paulo.galindo@era-genetica.com",
+  "emailVerified": false,
+  "passwordHash": "fhJpg2GaOi/mHdTj00EpO+whjfWvBOvUh2cImG37zqJ7zTOA0kYk4i2/e4qH4QHXrh8c6oF0jxvv6a6Wk0P7+A==",
+  "salt": "KZ1/uoj2/AZTnQ==",
+  "lastSignedInAt": "1758564875853",
+  "createdAt": "1758564875853",
+  "providerUserInfo": []
+},
+{
+  "localId": "HSAVp2w07KQO4tfsTEVnI7CeuCr1",
+  "email": "davi.fogaca@era-genetica.com",
+  "emailVerified": false,
+  "passwordHash": "2Ke1r21t5emooGkguEvro/Ycx5Df7Uumoa7MYbFBuaFWvCGndXju6V6O+5gmNpbWmGU8rWgJAwHaFtMbswRQpQ==",
+  "salt": "NJVIYU6EDxhQWg==",
+  "lastSignedInAt": "1758564874362",
+  "createdAt": "1758564874362",
+  "providerUserInfo": []
+},
+{
+  "localId": "a0WjnWQyvaSz6kI3xHpbVyHh9TH3",
+  "email": "eduardo.malavski@era-genetica.com",
+  "emailVerified": false,
+  "passwordHash": "r/s6zz3N9Yp0hgZMpFHK8ewU+uGwALez2YaMSzjeHE8SqfChSHGEclJ1u5wdxgXHhzK2nXwHpImP9NS5Jw5vDA==",
+  "salt": "jlMd/0s1vW2dzQ==",
+  "lastSignedInAt": "1758564874845",
+  "createdAt": "1758564874845",
+  "providerUserInfo": []
+},
+{
+  "localId": "ivEOS80TDzdTWN0nGJ2QUuMeSt03",
+  "email": "felipe.furlan@era-genetica.com",
+  "emailVerified": false,
+  "passwordHash": "MJtNvkn71OLV7CxujeOLr2yxElfsvRoNHRiEvARMhveCZsWlfqgEybDaNpzKiFi+uv6BzLbUK0Q64umhse6y5g==",
+  "salt": "yzTlM5ER9S/kaA==",
+  "lastSignedInAt": "1758564877339",
+  "createdAt": "1758564877339",
+  "providerUserInfo": []
+},
+{
+  "localId": "oLplrwHZ1XWNjjpsSrRspFyfJha2",
+  "email": "leonardo.macedo@era-genetica.com",
+  "emailVerified": false,
+  "passwordHash": "C6UlZsrrjp0uPbzg2baDi6tH5Yf+1B/cA4F9S32lllGxCTNJISTSLi07Z5Y0f32X1JEiZk8fnyCiuoMNnxffPA==",
+  "salt": "mAwglS4o3pNL6A==",
+  "lastSignedInAt": "1758564873507",
+  "createdAt": "1758564873507",
+  "providerUserInfo": []
+},
+{
+  "localId": "odw6GIKsDNQgOpWI31jV5xy6V4g1",
+  "email": "guilherme.diana@era-genetica.com",
+  "emailVerified": false,
+  "passwordHash": "2WOTxnKIOyZxwWCRJpCf3x+sjKIB7Mzg/WIds2/yDDA12uCRcz26GMZBqvpB0Vl1m6WSRKQ4wx03iFznK16UXA==",
+  "salt": "RB6wyU8H7r+fjA==",
+  "lastSignedInAt": "1758564876808",
+  "createdAt": "1758564876808",
+  "providerUserInfo": []
+},
+{
+  "localId": "xVn2VQqH1sPzOoKer49LSf0l0Tb2",
+  "email": "pedro.castanho@era-genetica.com",
+  "emailVerified": false,
+  "passwordHash": "OIcSxohWD3NgkDkzT4/28VOxg3bou5htPwlXp5LRKU9TddXIICn6gRgGpUU/BkLZZNAu84zPWZSIdK5qIXPPEw==",
+  "salt": "iOlnTZgwCJByFw==",
+  "lastSignedInAt": "1758565909939",
+  "createdAt": "1758564873171",
+  "providerUserInfo": []
+}]}
