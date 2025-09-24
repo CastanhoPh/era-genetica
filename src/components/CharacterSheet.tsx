@@ -9,7 +9,8 @@ interface Jutsu {
   id: string;
   name: string;
   chakraCost: number;
-  damage: number;
+  healthCost: number; // Renomeado de damage
+  actionType: 'Padrão' | 'Movimento' | 'Parcial';
 }
 
 interface Character {
@@ -34,7 +35,7 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ user, handleLogout }) =
   const [editingCharacter, setEditingCharacter] = useState<Character | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [photoPreview, setPhotoPreview] = useState<string>('');
-  const [newJutsu, setNewJutsu] = useState({ name: '', chakraCost: 0, damage: 0 });
+  const [newJutsu, setNewJutsu] = useState<{ name: string; chakraCost: number; healthCost: number; actionType: 'Padrão' | 'Movimento' | 'Parcial'; }>({ name: '', chakraCost: 0, healthCost: 0, actionType: 'Padrão' });
   const [editingJutsu, setEditingJutsu] = useState<Jutsu | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -61,8 +62,15 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ user, handleLogout }) =
         const docSnap = await getDoc(characterRef);
 
         if (docSnap.exists()) {
-          const charData = docSnap.data() as Character;
-          const sanitizedJutsus = charData.jutsus?.map(j => ({ ...j, damage: j.damage || 0 })) || [];
+          const charData = docSnap.data() as any; // Usar 'any' temporariamente
+          // Migração de 'damage' para 'healthCost'
+          const sanitizedJutsus = charData.jutsus?.map((j: any) => ({
+            ...j,
+            healthCost: j.healthCost ?? j.damage ?? 0, // Mapeia damage para healthCost se healthCost não existir
+            damage: undefined, // Remove a propriedade antiga
+            actionType: j.actionType || 'Padrão'
+          })) || [];
+
           setCharacter({ ...charData, jutsus: sanitizedJutsus });
           setPhotoPreview(charData.photo || '');
           setLocalNotes(charData.notes || '');
@@ -122,7 +130,7 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ user, handleLogout }) =
   const adjustHealth = (amount: number) => {
     setCharacter(prev => {
       if (!prev) return null;
-      const newHealth = Math.min(prev.currentHealth + amount, prev.maxHealth);
+      const newHealth = Math.min(Math.max(0, prev.currentHealth + amount), prev.maxHealth);
       saveCharacterToFirestore(user.uid, { currentHealth: newHealth });
       return { ...prev, currentHealth: newHealth };
     });
@@ -143,14 +151,14 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ user, handleLogout }) =
       const updatedJutsus = [...character.jutsus, jutsu];
       setCharacter(prev => prev && { ...prev, jutsus: updatedJutsus });
       saveCharacterToFirestore(user.uid, { jutsus: updatedJutsus });
-      setNewJutsu({ name: '', chakraCost: 0, damage: 0 });
+      setNewJutsu({ name: '', chakraCost: 0, healthCost: 0, actionType: 'Padrão' });
     }
   };
 
   const useJutsu = (jutsu: Jutsu) => {
-    if (character && character.currentChakra >= jutsu.chakraCost && character.currentHealth > 0) {
+    if (character && character.currentChakra >= jutsu.chakraCost && character.currentHealth > jutsu.healthCost) {
       adjustChakra(-jutsu.chakraCost);
-      adjustHealth(-jutsu.damage);
+      adjustHealth(-jutsu.healthCost);
     }
   };
 
@@ -359,12 +367,21 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ user, handleLogout }) =
                           />
                           <input
                             type="number"
-                            value={editingJutsu.damage}
-                            onChange={(e) => setEditingJutsu(prev => prev && { ...prev, damage: parseInt(e.target.value) || 0 })}
+                            value={editingJutsu.healthCost}
+                            onChange={(e) => setEditingJutsu(prev => prev && { ...prev, healthCost: parseInt(e.target.value) || 0 })}
                             className="w-1/2 px-3 py-2 bg-slate-800 border border-slate-600 rounded-md text-white"
                             placeholder="Custo de Vida"
                           />
                         </div>
+                        <select
+                          value={editingJutsu.actionType}
+                          onChange={(e) => setEditingJutsu(prev => prev && { ...prev, actionType: e.target.value as 'Padrão' | 'Movimento' | 'Parcial' })}
+                          className="w-full px-3 py-2 bg-slate-800 border border-slate-600 rounded-md text-white"
+                        >
+                          <option value="Padrão">Padrão</option>
+                          <option value="Movimento">Movimento</option>
+                          <option value="Parcial">Parcial</option>
+                        </select>
                         <div className="flex justify-end space-x-2">
                           <button onClick={() => setEditingJutsu(null)} className="p-2 text-slate-400 hover:text-red-400"><X className="w-5 h-5" /></button>
                           <button onClick={handleUpdateJutsu} className="p-2 text-slate-400 hover:text-green-400"><Save className="w-5 h-5" /></button>
@@ -373,7 +390,7 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ user, handleLogout }) =
                     ) : (
                       <button
                         onClick={() => useJutsu(jutsu)}
-                        disabled={character.currentChakra < jutsu.chakraCost || character.currentHealth <= 0}
+                        disabled={character.currentChakra < jutsu.chakraCost || character.currentHealth <= jutsu.healthCost}
                         className="w-full text-left bg-gradient-to-br from-slate-700/50 to-slate-800/30 border rounded-xl p-4 transition-all duration-200 group disabled:opacity-50 disabled:cursor-not-allowed enabled:hover:border-purple-400/50"
                       >
                         <div className="flex items-start justify-between">
@@ -386,7 +403,10 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ user, handleLogout }) =
                               </div>
                               <div className="flex items-center space-x-1">
                                 <Heart className="w-4 h-4 text-red-400" />
-                                <span className="text-sm text-red-300">{jutsu.damage}</span>
+                                <span className="text-sm text-red-300">{jutsu.healthCost}</span>
+                              </div>
+                              <div className="flex items-center space-x-1">
+                                <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 bg-slate-700/50 px-2 py-0.5 rounded">{jutsu.actionType}</span>
                               </div>
                             </div>
                           </div>
@@ -422,23 +442,32 @@ const CharacterSheet: React.FC<CharacterSheetProps> = ({ user, handleLogout }) =
                   type="text"
                   value={newJutsu.name}
                   onChange={(e) => setNewJutsu(prev => ({ ...prev, name: e.target.value }))}
-                  placeholder="Nome do Jutsu ou Ataque"
-                  className="w-full sm:flex-1 px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white"
+                  placeholder="Nome do Jutsu"
+                  className="w-full sm:w-1/2 flex-grow px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white"
                 />
                 <input
                   type="number"
                   value={newJutsu.chakraCost || ''}
                   onChange={(e) => setNewJutsu(prev => ({ ...prev, chakraCost: parseInt(e.target.value) || 0 }))}
-                  placeholder="Custo de Chakra"
+                  placeholder="Chakra"
                   className="w-full sm:w-24 px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white"
                 />
                 <input
                   type="number"
-                  value={newJutsu.damage || ''}
-                  onChange={(e) => setNewJutsu(prev => ({ ...prev, damage: parseInt(e.target.value) || 0 }))}
-                  placeholder="Custo de Vida"
-                  className="w-full sm:w-24 px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-write"
+                  value={newJutsu.healthCost || ''}
+                  onChange={(e) => setNewJutsu(prev => ({ ...prev, healthCost: parseInt(e.target.value) || 0 }))}
+                  placeholder="Vida"
+                  className="w-full sm:w-24 px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white"
                 />
+                <select
+                  value={newJutsu.actionType}
+                  onChange={(e) => setNewJutsu(prev => ({ ...prev, actionType: e.target.value as 'Padrão' | 'Movimento' | 'Parcial' }))}
+                  className="w-full sm:w-32 px-4 py-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white"
+                >
+                  <option value="Padrão">Padrão</option>
+                  <option value="Movimento">Movimento</option>
+                  <option value="Parcial">Parcial</option>
+                </select>
                 <button
                   onClick={addJutsu}
                   disabled={!newJutsu.name.trim()}

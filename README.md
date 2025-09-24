@@ -1,4 +1,4 @@
-# Era Genética - Aplicação de Gerenciamento de Personagem
+# Era Genética - Aplicação de Gerenciamento de FichaS
 
 ## Sobre o Projeto
 

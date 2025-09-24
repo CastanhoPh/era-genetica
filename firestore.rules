@@ -4,14 +4,20 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     function isAdmin() {
+      // Check if the user's UID exists as a document in the 'admins' collection.
       return exists(/databases/$(database)/documents/admins/$(request.auth.uid));
     }
 
     match /characters/{userId} {
-      // Allow users to read, create, and write their own character sheet.
-      // Allow admins to read any character sheet.
+      // Admins can read any character.
+      // Users can read/write their own character.
       allow read: if request.auth.uid == userId || isAdmin();
       allow create, write: if request.auth.uid == userId;
+    }
+
+    match /adminSettings/{adminId} {
+      // Admins can read and write their own settings document.
+      allow read, write: if request.auth != null && request.auth.uid == adminId && isAdmin();
     }
   }
 }
